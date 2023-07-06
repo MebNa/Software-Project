@@ -1,0 +1,134 @@
+/* Reset CSS */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em,i, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
+}
+
+a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 20px;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+
+.logo {
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+
+.search-form {
+    display: flex;
+}
+
+.search-input {
+    flex-grow: 1;
+    padding: 6px;
+    border: none;
+    border-radius: 5px;
+}
+
+.navigation-container {
+    display: flex;
+    justify-content: center;
+    background-color: #000;
+    margin-bottom: 40px
+    
+	
+}
+
+.navigation-item {
+    margin: 0 10px;
+}
+
+.movie-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 70%;
+    margin: 0 auto;
+}
+
+.movie-item {
+    width: 22%;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.movie-title {
+    margin-top: 10px;
+    height: 50px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.movie-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.header-container { 
+	    display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px;
+            background-color: #000; 
+	    margin-left: 50px
+}
+
+.user-actions {
+    margin-left: 80px;
+}
+
+.search-container {
+    width: 600px;
+    margin-left: 80px;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    flex-grow: 1;
+    padding: 10px;
+    width:500px;
+    border: none;
+    border-radius: 18px;
+}
+
+.search-button {
+    padding: 12px 12px;
+    background-color: #e50914;
+    color: #fff;
+    border: none;
+    border-radius: 18px;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background-color: #bf0e1a;
+}
+
