@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ManhwaMovies</title>
+    <!-- Link to CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="./search.css">
+    <!-- Link Swiper CSS-->
+    <link rel="stylesheet" href="css/cdn.jsdelivr.net_npm_swiper@10.0.4_swiper-bundle.min.css">
+    <!-- Fav Icon -->
+    <link rel="shortcut icon" href="img/fav-icon.png" type="image/x-icon">
+    <!-- Box Icon -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <!-- Nav -->
+        <div class="nav container">
+            <!-- Logo -->
+            <a href="TrangChu.html" class="logo">
+                Movie<span>Manhwa</span>
+            </a>
+            <!-- Search Box-->
+            <div class="search-box">
+                <form method="post" style="display: flex;">
+                    <input type="text" name="noidung" autocomplete="off" id="search-input" placeholder="Search Movies">
+                    <button class="search-button" type="submit" name="btn">
+                        <a href="Search.html"><i class='bx bx-search'></i> </a>
+                    </button>
+                </form>
+            </div>
+            <!-- User -->
+            <a href="#" class="user">
+                <img src="img/images.png" alt="" class="user-img">
+            </a>
+            <!-- NavBar -->
+            <div class="navbar">
+                <a href="#home" class="nav-link nav-active">
+                    <i class='bx bx-home' ></i>
+                    <span class="nav-link-title">Trang chủ</span>
+                </a>
+                <a href="#home" class="nav-link">
+                    <i class='bx bxs-hot' ></i>
+                    <span class="nav-link-title">Thịnh hành</span>
+                </a>
+                <a href="PhimBo.php" class="nav-link">
+                    <i class='bx bxs-movie' ></i>
+                    <span class="nav-link-title">Phim bộ</span>
+                </a>
+                <a href="PhimLe.php" class="nav-link">
+                    <i class='bx bxs-film'></i>
+                    <span class="nav-link-title">Phim lẻ</span>
+                </a>
+                <a href="#home" class="nav-link">
+                    <i class='bx bx-category' ></i>
+                    <span class="nav-link-title">Thể loại</span>
+                </a>
+                <a href="#home" class="nav-link">
+                    <i class='bx bx-heart'></i>
+                    <span class="nav-link-title">Yêu thích</span>
+                </a>
+            </div>
+        </div>
+    </header>
+    <!-- Trang chủ -->
+    <section class="home container" id="home">
+        <!-- Home Image -->
+        <img src="img/Solo_Leveling.jpg" alt="" class="home-img">
+        <!-- Home Text -->
+        <div class="home-text">
+            <h1 class="home-title">Solo Leveling</h1>
+            <p>Phát hành vào 01/2024</p>
+            <a href="#" class="watch-btn">
+                <i class='bx bx-right-arrow'></i>
+                <span>Xem trailer</span>
+            </a>
+        </div>
+    </section>
+    <!-- Home End -->
+    <!-- Popular Section Start -->
+    <section class="popular container" id="popluar">
+        <!-- Heading -->
+        <div class="heading">
+            <h2 class="heading-title">Movies Phổ Biến</h2>
+        </div>
+        <!-- Content -->
+        <div class="popular-content swiper">
+            <div class="swiper-wrapper">
+                <!-- Movies Box 1 -->
+                <div class="swiper-slide">
+                    <div class="movie-box">
+                        <img src="img/Tower_of_God.jpg" alt="" class="movie-box-img">
+                        <div class="box-text">
+                            <h2 class="movie-title">Tower Of God</h2>
+                        <span class="movie-type">Hành Động, Phiêu Lưu, Hoạt Hình</span>
+                        <a href="#" class="watch-btn play-btn">
+                            <i class='bx bx-right-arrow'></i>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Movies Box 2 -->
+                <div class="swiper-slide">
+                    <div class="movie-box">
+                        <img src="img/TGDQ.jpg" alt="" class="movie-box-img">
+                        <div class="box-text">
+                            <h2 class="movie-title">Demon Slayer - <br>Thanh gươm diệt quỷ</h2>
+                        <span class="movie-type">Hành Động, Phiêu Lưu, Hoạt Hình</span>
+                        <a href="#" class="watch-btn play-btn">
+                            <i class='bx bx-right-arrow'></i>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Movies Box 3 -->
+                 <div class="swiper-slide">
+                    <div class="movie-box">
+                        <img src="img/One Piece_ Stampede.jpg" alt="" class="movie-box-img">
+                        <div class="box-text">
+                            <h2 class="movie-title">One Piece - <br>Stampded</h2>
+                        <span class="movie-type">Hành Động, Phiêu Lưu, Hoạt Hình</span>
+                        <a href="#" class="watch-btn play-btn">
+                            <i class='bx bx-right-arrow'></i>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Movies Box 4 -->
+                <div class="swiper-slide">
+                    <div class="movie-box">
+                        <img src="img/Bách Luyện Thành Thần.jpg" alt="" class="movie-box-img">
+                        <div class="box-text">
+                            <h2 class="movie-title">Bách luyện thành thần</h2>
+                        <span class="movie-type">Hành Động, Phiêu Lưu, Hoạt Hình</span>
+                        <a href="#" class="watch-btn play-btn">
+                            <i class='bx bx-right-arrow'></i>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Movies Box 5 -->
+                <div class="swiper-slide">
+                    <div class="movie-box">
+                        <img src="img/Watch Fairy Tail.png" alt="" class="movie-box-img">
+                        <div class="box-text">
+                            <h2 class="movie-title">Fairy Tail</h2>
+                        <span class="movie-type">Hành Động, Phiêu Lưu, Hoạt Hình</span>
+                        <a href="#" class="watch-btn play-btn">
+                            <i class='bx bx-right-arrow'></i>
+                        </a>
+                        </div>  
+                    </div>
+                </div>
+                <!-- Movies Box 6 -->
+                <div class="swiper-slide">
+                    <div class="movie-box">
+                        <img src="img/Jujutsu Kaisen.jpg" alt="" class="movie-box-img">
+                        <div class="box-text">
+                            <h2 class="movie-title">Jujutsu Kaisen - <br>Chú Thuật Hồi Chiến</h2>
+                        <span class="movie-type">Hành Động, Hoạt Hình</span>
+                        <a href="#" class="watch-btn play-btn">
+                            <i class='bx bx-right-arrow'></i>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Movies Box 7 -->
+                <div class="swiper-slide">
+                    <div class="movie-box">
+                        <img src="img/Kaguya Shinomiya_Image Gallery.png" alt="" class="movie-box-img">
+                        <div class="box-text">
+                            <h2 class="movie-title">Kaguya Shinomiya</h2>
+                        <span class="movie-type">Học Đường, Lãng Mạn, Hoạt Hình</span>
+                        <a href="#" class="watch-btn play-btn">
+                            <i class='bx bx-right-arrow'></i>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Movies Box 8 -->
+                <div class="swiper-slide">
+                    <div class="movie-box">
+                        <img src="img/SPY×FAMILY (2022).jpg" alt="" class="movie-box-img">
+                        <div class="box-text">
+                            <h2 class="movie-title">Spy Family</h2>
+                        <span class="movie-type">Gia đình, Lãng Mạn, Hoạt Hình</span>
+                        <a href="#" class="watch-btn play-btn">
+                            <i class='bx bx-right-arrow'></i>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Movies Box 9 -->
+                <div class="swiper-slide">
+                    <div class="movie-box">
+                        <img src="img/Conan.jpg" alt="" class="movie-box-img">
+                        <div class="box-text">
+                            <h2 class="movie-title">Conan</h2>
+                        <span class="movie-type">Hành Động, Trinh thám, Hoạt Hình</span>
+                        <a href="#" class="watch-btn play-btn">
+                            <i class='bx bx-right-arrow'></i>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </section>
+    <!-- Popular Section End-->
+
+    <!-- Link Swiper JS -->
+    <script src="js/cdn.jsdelivr.net_npm_swiper@10.0.4_swiper-bundle.min.js"></script>
+    <!-- Link to JS -->
+    <script src="js/main.js"></script>
+</body>
+</html>
