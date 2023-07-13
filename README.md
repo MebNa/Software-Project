@@ -27,3 +27,4 @@ Dừng XAMPP: Khi bạn đã hoàn thành công việc phát triển và thử n
 Lưu ý
 Đảm bảo rằng XAMPP đang chạy khi bạn muốn phát triển hoặc chạy các ứng dụng web cục bộ trên máy tính của mình.
 Hãy cẩn thận khi làm việc với các tệp tin và cơ sở dữ liệu trong XAMPP, đặc biệt là trên môi trường phát triển và không được sử dụng cho môi trường sản xuất.
+Xem configure trong SQL của Xampp có giống với phần db_connection.php không để điều chỉnh lại
