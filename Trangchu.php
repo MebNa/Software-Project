@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 
 // Kiểm tra xem có tham số user_id trong URL hay không
@@ -9,6 +8,24 @@ if (isset($_GET['user_id'])) {
     $_SESSION['user_id'] = null;
 }
 
+// Kết nối đến cơ sở dữ liệu
+include 'db_connection.php';
+
+$user = null;
+
+// Lấy thông tin người dùng từ cơ sở dữ liệu (nếu có)
+if ($_SESSION['user_id'] !== null) {
+    $user_id = $_SESSION['user_id'];
+    $sql = "SELECT * FROM users WHERE id = '$user_id'";
+    $result = $connection->query($sql);
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+    }
+}
+
+// Đóng kết nối cơ sở dữ liệu
+$connection->close();
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +45,21 @@ if (isset($_GET['user_id'])) {
     <!-- Box Icon -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" type="text/css" href="dropdown.css">
+    <style>
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
 
+        .user-info img {
+            width: 250px;
+            height:350px;
+            object-fit: cover;
+            margin-right: 1rem;
+            margin-bottom:30px;
+        }
+
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -50,8 +81,8 @@ if (isset($_GET['user_id'])) {
             </div>
             <!-- User -->
             <a href="<?php echo isset($_SESSION['user_id']) ? 'UserInfo.php?user_id=' . $_SESSION['user_id'] : 'Dangnhap.php'; ?>" class="user">
-    <img src="img/images.png" alt="" class="user-img">
-</a>
+            <img src="<?php echo $user !== null ? $user['avatar_link'] : 'img/images.png'; ?>" alt="" class="user-img">
+            </a>
             <!-- NavBar -->
             <div class="navbar">
             <a href="Trangchu.php?user_id=<?php echo $_SESSION['user_id']; ?>" class="nav-link nav-active">
@@ -100,7 +131,7 @@ if (isset($_GET['user_id'])) {
                      </div>
                 
                  
-                <a href="#home" class="nav-link">
+                <a href="Yeuthich.php" class="nav-link">
                     <i class='bx bx-heart'></i>
                     <span class="nav-link-title">Yêu thích</span>
                 </a>

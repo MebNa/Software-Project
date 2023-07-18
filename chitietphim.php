@@ -2,6 +2,55 @@
 // Kết nối đến cơ sở dữ liệu
 include 'db_connection.php';
 
+// Kết nối đến cơ sở dữ liệu
+
+// Kiểm tra xem user_id đã tồn tại trong $_SESSION hay chưa
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+} else {
+    $user_id = null;
+}
+
+// Kiểm tra xem id phim đã được truyền vào hay chưa
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+
+    // Truy vấn thông tin phim dựa trên id
+    $sql = "SELECT * FROM movies WHERE id = $id";
+    $result = $connection->query($sql);
+
+    // Kiểm tra xem có kết quả trả về hay không
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+
+        // Kiểm tra yêu cầu thêm vào danh sách yêu thích
+        if (isset($_POST['add_to_favorites'])) {
+            // Kiểm tra xem user đã đăng nhập hay chưa
+            if ($user_id !== null) {
+                // Kiểm tra xem bộ phim đã có trong danh sách yêu thích của user chưa
+                $checkSql = "SELECT * FROM favorites WHERE user_id = '$user_id' AND movie_id = '$id'";
+                $checkResult = $connection->query($checkSql);
+
+                if ($checkResult->num_rows > 0) {
+                    echo "Bộ phim đã có trong danh sách yêu thích của bạn.";
+                } else {
+                    // Thêm bộ phim vào danh sách yêu thích
+                    $insertSql = "INSERT INTO favorites (user_id, movie_id) VALUES ('$user_id', '$id')";
+                    $insertResult = $connection->query($insertSql);
+
+                    if ($insertResult === true) {
+                        echo "Bộ phim đã được thêm vào danh sách yêu thích của bạn.";
+                    } else {
+                        echo "Đã xảy ra lỗi. Vui lòng thử lại sau.";
+                    }
+                }
+            } else {
+                echo "Bạn phải đăng nhập để thực hiện thao tác này.";
+            }
+        }
+    }
+}
+
 // Kiểm tra xem user_id đã tồn tại trong $_SESSION hay chưa
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
@@ -38,6 +87,22 @@ if (isset($_GET['id'])) {
             <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
             <link rel="stylesheet" type="text/css" href="dropdown.css">
             <style>
+
+.add-to-favorites {
+            background-color: #E91A46;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 20px;
+        }
+
+        .add-to-favorites:hover {
+            background-color: #c60738;
+        }
+
                 .movie-details.container {
                     display: flex;
                     flex-wrap: wrap;
@@ -219,6 +284,9 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>
             </header>
+            
+
+
             <section class="movie-details container">
 
                 <div class="poster-info-container">
@@ -238,6 +306,9 @@ if (isset($_GET['id'])) {
                         <p><strong>Số tập:</strong> <?php echo $row['episodes']; ?></p>
                         <p><strong>Diễn viên:</strong> <?php echo $row['actors']; ?></p>
                         <p><strong>Đạo diễn:</strong> <?php echo $row['director']; ?></p>
+                        <form method="POST" action="">
+                    <button type="submit" name="add_to_favorites" class="add-to-favorites">Thêm vào danh sách yêu thích</button>
+                </form>
                     </div>
                 </div>
                 <div class="movie-description">

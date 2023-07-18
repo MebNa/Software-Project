@@ -8,24 +8,51 @@ include 'db_connection.php';
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
 } else {
-    $user_id = null;
+    // Chuyển hướng đến trang Đăng nhập
+    header("Location: Dangnhap.php");
+    exit();
 }
 
 // Lấy thông tin người dùng từ cơ sở dữ liệu
-if ($user_id !== null) {
-    $sql = "SELECT * FROM users WHERE id = '$user_id'";
-    $result = $connection->query($sql);
+$sql = "SELECT * FROM users WHERE id = '$user_id'";
+$result = $connection->query($sql);
 
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-    } else {
-        $user = null;
-    }
+if ($result->num_rows > 0) {
+    $user = $result->fetch_assoc();
 } else {
-    $user = null;
+    // Chuyển hướng đến trang Đăng nhập
+    header("Location: Dangnhap.php");
+    exit();
 }
 
-$connection->close();
+// Xử lý yêu cầu cập nhật thông tin người dùng
+if (isset($_POST['update'])) {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $avatar_link = isset($_POST['avatar_link']) ? $_POST['avatar_link'] : '';
+
+    $sql = "UPDATE users SET username = '$username', email = '$email', avatar_link = '$avatar_link' WHERE id = '$user_id'";
+    $result = $connection->query($sql);
+
+    if ($result === true) {
+        // Cập nhật thành công, cập nhật lại thông tin người dùng
+        $user['username'] = $username;
+        $user['email'] = $email;
+        $user['avatar_link'] = $avatar_link;
+    }
+}
+
+
+// Xử lý yêu cầu đăng xuất
+if (isset($_POST['logout'])) {
+    // Xóa tất cả các biến session
+    session_unset();
+    // Hủy bỏ session
+    session_destroy();
+    // Điều hướng đến trang Đăng nhập
+    header("Location: Dangnhap.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -39,90 +66,8 @@ $connection->close();
     <link rel="stylesheet" href="css/style.css">
     <link rel="shortcut icon" href="img/fav-icon.png" type="image/x-icon">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="dropdown.css">
     <style>
-        * {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            scroll-behavior: smooth;
-            box-sizing: border-box;
-            scroll-padding-top: 2rem;
-        }
-
-        :root {
-            --main-color: #e70634;
-            --hover-color: hsl(37, 94%, 57%);
-            --body-color: #1e1e2a;
-            --container-color: #2d2e37;
-            --text-color: #fcfeff;
-        }
-
-        /* Rest of the CSS styles go here */
-
-        /* Header */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: var(--body-color);
-            z-index: 100;
-        }
-
-        .container {
-            max-width: 1068px;
-            margin: auto;
-            width: 100%;
-        }
-
-        .nav {
-            display: flex;
-            align-items: center;
-            justify-self: center;
-            padding: 20px 0;
-        }
-
-        .logo {
-            font-size: 1.4rem;
-            color: var(--text-color);
-            font-weight: 600;
-            text-transform: uppercase;
-            margin: 0 auto 0 0;
-        }
-
-        .logo span {
-            color: var(--main-color);
-        }
-
-        .search-box {
-            max-width: 240px;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            column-gap: 0.7rem;
-            padding: 8px 15px;
-            background: var(--container-color);
-            border-radius: 4rem;
-            margin-right: 1rem;
-        }
-
-        .search-box .bx {
-            font-size: 1.1rem;
-        }
-
-        .search-box .bx:hover {
-            color: var(--main-color);
-        }
-
-        #search-input {
-            width: 100%;
-            border: none;
-            outline: none;
-            color: var(--text-color);
-            background: transparent;
-            font-size: 0.938rem;
-        }
-
         .user {
             display: flex;
             align-items: center;
@@ -132,7 +77,7 @@ $connection->close();
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            object-fit: cover;
+            object-fit: contain;
             object-position: center;
         }
 
@@ -147,11 +92,11 @@ $connection->close();
         }
 
         .user-info img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
+            width: 100%;
+            height:500px;
             object-fit: cover;
             margin-right: 1rem;
+            margin-bottom:30px;
         }
 
         .info p {
@@ -165,83 +110,186 @@ $connection->close();
         label {
             display: block;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 15px;
         }
 
-        input[type="text"],
+        .infor-input,
         input[type="email"] {
             width: 100%;
-            padding: 0.5rem;
+            padding: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 1rem;
+            margin-bottom: 15px;
         }
 
-        button[type="submit"] {
+        .logout-button {
             background-color: var(--main-color);
             color: var(--text-color);
-            padding: 0.5rem 1rem;
+            padding: 10px 80px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .logout-button:hover {
+            background-color: var(--hover-color);
+            color: var(--text-color);
+        }
+
+        .container h1 {
+            margin-top: 60px;
+            margin-bottom: 30px;
+            font-size: 30px;
+            color: #E91A46;
+        }
+
+        .container h2 {
+            margin-bottom: 30px;
+            font-size: 30px;
+            color: #E91A46;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .update-button {
+            background-color: var(--main-color);
+            color: var(--text-color);
+            padding: 10px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .update-button:hover {
+            background-color: var(--hover-color);
+            color: var(--text-color);
         }
     </style>
 </head>
 
 <body>
+    <!-- Header -->
     <header>
-        <div class="container">
-            <nav class="nav">
-                <a href="Trangchu.php?user_id=<?php echo $_SESSION['user_id']; ?>" class="logo">
-                    Movie<span>Manhwa</span>
-                </a>
-                <div class="search-box">
+        <!-- Navigation -->
+        <div class="nav container">
+            <!-- Logo -->
+            <a href="TrangChu.html" class="logo">
+                Movie<span>Manhwa</span>
+            </a>
+            <!-- Search Box -->
+            <div class="search-box">
+                <form method="post" style="display: flex;">
                     <input type="text" name="noidung" autocomplete="off" id="search-input" placeholder="Search Movies">
                     <button class="search-button" type="submit" name="btn">
-                        <a href="Search.html"><i class='bx bx-search'></i> </a>
+                        <a href="search.php"><i class="bx bx-search"></i> </a>
                     </button>
-                </div>
-                <div class="user">
-                    <a href="<?php echo isset($_SESSION['user_id']) ? 'UserInfo.php?user_id=' . $_SESSION['user_id'] : 'Dangnhap.php'; ?>">
-                        <img class="user-img" src="<?php echo $user['avatar_link']; ?>" alt="User Avatar">
+                </form>
+            </div>
+            <!-- User -->
+            <a href="#" class="user">
+                <img src="<?php echo isset($user['avatar_link']) ? $user['avatar_link'] : 'img/images.png'; ?>" alt="" class="user-img">
+            </a>
+            <!-- Navbar -->
+            <div class="navbar">
+                <a href="Trangchu.php?user_id=<?php echo $_SESSION['user_id']; ?>" class="nav-link">
+                    <i class="bx bx-home nav-link-icon"></i>
+                    <span class="nav-link-title">Trang chủ</span>
+                </a>
+                <a href="#home" class="nav-link">
+                    <i class="bx bxs-hot nav-link-icon"></i>
+                    <span class="nav-link-title">Thịnh hành</span>
+                </a>
+                <a href="PhimBo.php?user_id=<?php echo $_SESSION['user_id']; ?>" class="nav-link nav-active">
+                    <i class="bx bxs-movie nav-link-icon"></i>
+                    <span class="nav-link-title">Phim bộ</span>
+                </a>
+                <a href="PhimLe.php?user_id=<?php echo $_SESSION['user_id']; ?>" class="nav-link">
+                    <i class="bx bxs-film nav-link-icon"></i>
+                    <span class="nav-link-title">Phim lẻ</span>
+                </a>
+                <div class="dropdown-toggle-container" id="genre-dropdown-toggle">
+                    <a href="#" class="nav-link dropdown">
+                        <i class="bx bx-category nav-link-icon"></i>
+                        <span class="nav-link-title">Thể loại</span>
                     </a>
+                    <div class="dropdown-content">
+                        <div class="column">
+                            <a href="Theloai.php?genre=Hài hước&user_id=<?php echo $_SESSION['user_id']; ?>">Hài hước</a>
+                            <a href="Theloai.php?genre=Hành động&user_id=<?php echo $_SESSION['user_id']; ?>">Hành động</a>
+                            <a href="Theloai.php?genre=Phiêu lưu&user_id=<?php echo $_SESSION['user_id']; ?>">Phiêu lưu</a>
+                            <a href="Theloai.php?genre=Tình cảm&user_id=<?php echo $_SESSION['user_id']; ?>">Tình cảm</a>
+                            <a href="Theloai.php?genre=Học đường&user_id=<?php echo $_SESSION['user_id']; ?>">Học đường</a>
+                            <a href="Theloai.php?genre=Võ thuật&user_id=<?php echo $_SESSION['user_id']; ?>">Võ thuật</a>
+                            <a href="Theloai.php?genre=Tài liệu&user_id=<?php echo $_SESSION['user_id']; ?>">Tài liệu</a>
+                        </div>
+                        <div class="column">
+                            <a href="Theloai.php?genre=Viễn tưởng&user_id=<?php echo $_SESSION['user_id']; ?>">Viễn tưởng</a>
+                            <a href="Theloai.php?genre=Hoạt hình&user_id=<?php echo $_SESSION['user_id']; ?>">Hoạt hình</a>
+                            <a href="Theloai.php?genre=Thể thao&user_id=<?php echo $_SESSION['user_id']; ?>">Thể thao</a>
+                            <a href="Theloai.php?genre=Âm nhạc&user_id=<?php echo $_SESSION['user_id']; ?>">Âm nhạc</a>
+                            <a href="Theloai.php?genre=Gia đình&user_id=<?php echo $_SESSION['user_id']; ?>">Gia đình</a>
+                            <a href="Theloai.php?genre=Kinh dị&user_id=<?php echo $_SESSION['user_id']; ?>">Kinh dị</a>
+                            <a href="Theloai.php?genre=Tâm lý&user_id=<?php echo $_SESSION['user_id']; ?>">Tâm lý</a>
+                        </div>
+                    </div>
                 </div>
-            </nav>
+                <a href="#home" class="nav-link">
+                    <i class="bx bx-heart nav-link-icon"></i>
+                    <span class="nav-link-title">Yêu thích</span>
+                </a>
+            </div>
         </div>
     </header>
 
     <section class="container">
-        <h1>User Info</h1>
-        <div class="user-info">
-            <img src="<?php echo $user['avatar_link']; ?>" alt="Avatar">
-            <div class="info">
-                <p><strong>Username:</strong> <?php echo $user['username']; ?></p>
-                <p><strong>Email:</strong> <?php echo $user['email']; ?></p>
+        <?php if ($user === null) : ?>
+            <h1>Vui lòng đăng nhập trước</h1>
+        <?php else : ?>
+            <h1>Thông tin cá nhân</h1>
+            <div class="user-info">
+                <img src="<?php echo isset($user['avatar_link']) ? $user['avatar_link'] : 'img/images.png'; ?>" alt="Avatar">
+                <div class="info">
+                </div>
             </div>
-        </div>
 
-        <h2>Update Info</h2>
-        <form method="POST" action="">
-            <div>
-                <label for="username">Username:</label>
-                <input type="text" name="username" id="username" value="<?php echo $user['username']; ?>">
-            </div>
-            <div>
-                <label for="email">Email:</label>
-                <input type="email" name="email" id="email" value="<?php echo $user['email']; ?>">
-            </div>
-            <div>
-                <label for="avatar_link">Avatar Link:</label>
-                <input type="text" name="avatar_link" id="avatar_link" value="<?php echo $user['avatar_link']; ?>">
-            </div>
-            <button type="submit" name="update">Update</button>
-        </form>
-
-        <form method="POST" action="">
-            <button type="submit" name="logout">Logout</button>
-        </form>
+            <h2>Cập nhật thông tin</h2>
+            <form method="POST" action="">
+                <div>
+                    <label for="username">Tên tài khoản:</label>
+                    <input type="text" name="username" id="username" class="infor-input" value="<?php echo $user['username']; ?>">
+                </div>
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" id="email" value="<?php echo $user['email']; ?>">
+                </div>
+                <div>
+                    <label for="avatar_link">Đường dẫn ảnh đại diện:</label>
+                    <input type="text" name="avatar_link" id="avatar_link" class="infor-input" value="<?php echo $user['avatar_link']; ?>">
+                </div>
+                <div class="button-row">
+                    <button type="submit" name="update" class="update-button">Cập nhật</button>
+                    <button type="submit" name="logout" class="logout-button">Đăng xuất</button>
+                </div>
+            </form>
+        <?php endif; ?>
     </section>
+
+    <script src="js/main.js"></script>
+    <script src="dropdown.js"></script>
 </body>
 
 </html>
+
+<?php
+// Đóng kết nối cơ sở dữ liệu
+$connection->close();
+?>
