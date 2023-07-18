@@ -51,6 +51,7 @@ if (isset($_GET['id']) && isset($_GET['episode'])) {
                 <link rel="stylesheet" href="css/style.css">
                 <link rel="shortcut icon" href="img/fav-icon.png" type="image/x-icon">
                 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+                <link rel="stylesheet" type="text/css" href="dropdown.css">
                 <style>
                 /* CSS cho phần khung xem phim */
                 .video-container {
@@ -166,7 +167,7 @@ if (isset($_GET['id']) && isset($_GET['episode'])) {
                                 <i class="bx bxs-hot"></i>
                                 <span class="nav-link-title">Thịnh hành</span>
                             </a>
-                            <a href="PhimBo.php" class="nav-link nav-active">
+                            <a href="PhimBo.php" class="nav-link">
                                 <i class="bx bxs-movie"></i>
                                 <span class="nav-link-title">Phim bộ</span>
                             </a>
@@ -174,10 +175,37 @@ if (isset($_GET['id']) && isset($_GET['episode'])) {
                                 <i class="bx bxs-film"></i>
                                 <span class="nav-link-title">Phim lẻ</span>
                             </a>
-                            <a href="#home" class="nav-link">
-                                <i class="bx bx-category"></i>
-                                <span class="nav-link-title">Thể loại</span>
-                            </a>
+
+                            <div class="dropdown-toggle-container" id="genre-dropdown-toggle">
+                <a href="#" class="nav-link dropdown">
+                    <i class="bx bx-category nav-link-icon"></i>
+                    <span class="nav-link-title">Thể loại</span>
+                 </a>
+                 <div class="dropdown-content">
+                 <div class="column">
+                     <a href="Theloai.php?genre=Hài hước">Hài hước</a>
+                     <a href="Theloai.php?genre=Hành động">Hành động</a>
+                     <a href="Theloai.php?genre=Phiêu lưu">Phiêu lưu</a>
+                     <a href="Theloai.php?genre=Tình cảm">Tình cảm</a>
+                     <a href="Theloai.php?genre=Học đường">Học đường</a>
+                     <a href="Theloai.php?genre=Võ thuật">Võ thuật</a>
+                     <a href="Theloai.php?genre=Tài liệu">Tài liệu</a>
+         
+                 </div>
+                 <div class="column">
+                     <a href="Theloai.php?genre=Viễn tưởng">Viễn tưởng</a>
+                     <a href="Theloai.php?genre=Hoạt hình">Hoạt hình</a>
+                     <a href="Theloai.php?genre=Thể thao">Thể thao</a>
+                     <a href="Theloai.php?genre=Âm nhạc">Âm nhạc</a>
+                     <a href="Theloai.php?genre=Gia đình">Gia đình</a>
+                     <a href="Theloai.php?genre=Kinh dị">Kinh dị</a>
+                     <a href="Theloai.php?genre=Tâm lý">Tâm lý</a>
+                 </div>
+                 <!-- Thêm các thể loại khác tương ứng với các option -->
+             </div>
+         
+             </div>
+             
                             <a href="#home" class="nav-link">
                                 <i class="bx bx-heart"></i>
                                 <span class="nav-link-title">Yêu thích</span>
@@ -222,6 +250,7 @@ if (isset($_GET['id']) && isset($_GET['episode'])) {
                   </div>
                 </section>
                 <script src="js/main.js"></script>
+                <script src="dropdown.js"></script>
             </body>
             </html>';
         } else {

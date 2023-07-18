@@ -2,6 +2,15 @@
 // Kết nối đến cơ sở dữ liệu
 include 'db_connection.php';
 
+// Kiểm tra xem user_id đã tồn tại trong $_SESSION hay chưa
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+} else {
+    $user_id = null;
+}
+
+
+
 // Kiểm tra xem id phim đã được truyền vào hay chưa
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
@@ -27,6 +36,7 @@ if (isset($_GET['id'])) {
             <link rel="stylesheet" href="css/style.css">
             <link rel="shortcut icon" href="img/fav-icon.png" type="image/x-icon">
             <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+            <link rel="stylesheet" type="text/css" href="dropdown.css">
             <style>
                 .movie-details.container {
                     display: flex;
@@ -41,7 +51,6 @@ if (isset($_GET['id'])) {
                     width: 35%;
                     position: relative;
                     cursor: pointer;
-                    overflow: hidden;
                     border-radius: 20px;
                 }
 
@@ -101,6 +110,7 @@ if (isset($_GET['id'])) {
                     padding-top: 16px;
                     font-size: 22px;
                     line-height: 2;
+                    padding-bottom: 50px;
                 }
 
                 .poster-info-container {
@@ -120,6 +130,7 @@ if (isset($_GET['id'])) {
 
                 .movie-description h2 {
                     color: #E91A46;
+                    font-size: 30px;
                 }
 
                 .movie-info strong {
@@ -132,7 +143,7 @@ if (isset($_GET['id'])) {
             <header>
                 <div class="nav container">
 
-                    <a href="TrangChu.html" class="logo">
+                    <a href="TrangChu.php" class="logo">
                         Movie<span>Manhwa</span>
                     </a>
                     <div class="search-box">
@@ -160,7 +171,7 @@ if (isset($_GET['id'])) {
                             <span class="nav-link-title">Thịnh hành</span>
                         </a>
 
-                        <a href="PhimBo.php" class="nav-link nav-active">
+                        <a href="PhimBo.php" class="nav-link">
                             <i class="bx bxs-movie"></i>
                             <span class="nav-link-title">Phim bộ</span>
                         </a>
@@ -170,10 +181,35 @@ if (isset($_GET['id'])) {
                             <span class="nav-link-title">Phim lẻ</span>
                         </a>
 
-                        <a href="#home" class="nav-link">
-                            <i class="bx bx-category"></i>
-                            <span class="nav-link-title">Thể loại</span>
-                        </a>
+                        <div class="dropdown-toggle-container" id="genre-dropdown-toggle">
+                <a href="#" class="nav-link dropdown ">
+                    <i class="bx bx-category nav-link-icon"></i>
+                    <span class="nav-link-title">Thể loại</span>
+                 </a>
+                 <div class="dropdown-content">
+                 <div class="column">
+                     <a href="Theloai.php?genre=Hài hước">Hài hước</a>
+                     <a href="Theloai.php?genre=Hành động">Hành động</a>
+                     <a href="Theloai.php?genre=Phiêu lưu">Phiêu lưu</a>
+                     <a href="Theloai.php?genre=Tình cảm">Tình cảm</a>
+                     <a href="Theloai.php?genre=Học đường">Học đường</a>
+                     <a href="Theloai.php?genre=Võ thuật">Võ thuật</a>
+                     <a href="Theloai.php?genre=Tài liệu">Tài liệu</a>
+         
+                 </div>
+                 <div class="column">
+                     <a href="Theloai.php?genre=Viễn tưởng">Viễn tưởng</a>
+                     <a href="Theloai.php?genre=Hoạt hình">Hoạt hình</a>
+                     <a href="Theloai.php?genre=Thể thao">Thể thao</a>
+                     <a href="Theloai.php?genre=Âm nhạc">Âm nhạc</a>
+                     <a href="Theloai.php?genre=Gia đình">Gia đình</a>
+                     <a href="Theloai.php?genre=Kinh dị">Kinh dị</a>
+                     <a href="Theloai.php?genre=Tâm lý">Tâm lý</a>
+                 </div>
+                 <!-- Thêm các thể loại khác tương ứng với các option -->
+             </div>
+         
+             </div>
 
                         <a href="#home" class="nav-link">
                             <i class="bx bx-heart"></i>
@@ -208,11 +244,17 @@ if (isset($_GET['id'])) {
                     <h2>Nội dung chi tiết</h2>
                     <p><?php echo $row['summary']; ?></p>
                 </div>
+               
 
+               <?php
+        // Gọi file comment.php
+        include 'comment.php';
+        ?>
 
             </section>
             <script src="js/main.js"></script>
-
+            <script src="dropdown.js"></script>
+            
         </body>
 
         </html>
