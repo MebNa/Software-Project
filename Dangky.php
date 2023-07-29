@@ -41,7 +41,7 @@ $connection->close();
 <head>
     <title>Đăng ký</title>
     <style>
-        /* CSS đã được chỉnh sửa */
+
         body {
             --main-color: #e70634;
             --hover-color: hsl(37, 94%, 57%);
