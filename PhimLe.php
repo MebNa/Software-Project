@@ -11,7 +11,7 @@ if (isset($_GET['user_id'])) {
 }
 
 // Xác định số phần tử trên mỗi trang và trang hiện tại
-$itemsPerPage = 4; // Số phim lẻ hiển thị trên mỗi trang
+$itemsPerPage = 4; // Số phim bộ hiển thị trên mỗi trang
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1; // Trang hiện tại, mặc định là trang đầu tiên
 
 // Tính toán số phần tử bỏ qua
@@ -20,15 +20,26 @@ if ($offset < 0) {
     $offset = 0;
 }
 
-// Truy vấn danh sách phim lẻ từ cơ sở dữ liệu với phân trang
+
+if ($_SESSION['user_id'] !== null) {
+    $user_id = $_SESSION['user_id'];
+    $sql = "SELECT * FROM users WHERE id = '$user_id'";
+    $result = $connection->query($sql);
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+    }
+}
+
+// Truy vấn danh sách phim bộ từ cơ sở dữ liệu với phân trang
 $sql = "SELECT * FROM movies WHERE genre LIKE '%Phim lẻ%' LIMIT $itemsPerPage OFFSET $offset";
 $result = $connection->query($sql);
 
-// Truy vấn để đếm tổng số phim lẻ
-$sqlCount = "SELECT COUNT(*) AS total FROM movies WHERE genre LIKE '%Phim lẻ%'";
+// Truy vấn để đếm tổng số phim bộ
+$sqlCount = "SELECT COUNT(*) AS total FROM movies WHERE genre LIKE '%Phim bộ%'";
 $resultCount = $connection->query($sqlCount);
 $rowCount = $resultCount->fetch_assoc();
-$totalItems = $rowCount['total']; // Tổng số phim lẻ
+$totalItems = $rowCount['total']; // Tổng số phim bộ
 $totalPages = ceil($totalItems / $itemsPerPage); // Tổng số trang
 
 // Xử lý khi người dùng nhấp vào nút Đến trang hoặc bấm Enter
@@ -38,7 +49,7 @@ if (isset($_POST['go']) || isset($_POST['targetPage'])) {
     if ($targetPage >= 1 && $targetPage <= $totalPages) {
         $page = $targetPage;
         $offset = ($page - 1) * $itemsPerPage;
-        $sql = "SELECT * FROM movies WHERE genre LIKE '%Phim lẻ%' LIMIT $itemsPerPage OFFSET $offset";
+        $sql = "SELECT * FROM movies WHERE genre LIKE '%Phim bộ%' LIMIT $itemsPerPage OFFSET $offset";
         $result = $connection->query($sql);
     }
 }
@@ -106,15 +117,15 @@ if (isset($_POST['go']) || isset($_POST['targetPage'])) {
                 Movie<span>Manhwa</span>
             </a>
             <div class="search-box">
-                <form method="post" style="display: flex;">
-                    <input type="text" name="noidung" autocomplete="off" id="search-input" placeholder="Search Movies">
-                    <button class="search-button" type="submit" name="btn">
-                        <a href="search.php"><i class="bx bx-search"></i> </a>
-                    </button>
-                </form>
-            </div>
-            <a href="#" class="user">
-                <img src="img/images.png" alt="" class="user-img">
+    <form method="post" action="search.php" style="display: flex;">
+        <input type="text" name="noidung" autocomplete="off" id="search-input" placeholder="Search Movies">
+        <button class="search-button" type="submit" name="btn">
+            <i class="bx bx-search"></i>
+        </button>
+    </form>
+</div>
+            <a href="<?php echo isset($_SESSION['user_id']) ? 'UserInfo.php?user_id=' . $_SESSION['user_id'] : 'Dangnhap.php'; ?>" class="user">
+                <img src="<?php echo isset($user['avatar_link']) ? $user['avatar_link'] : 'img/images.png'; ?>" alt="" class="user-img">
             </a>
             <div class="navbar">
                 <a href="Trangchu.php?user_id=<?php echo $_SESSION['user_id']; ?>" class="nav-link">
@@ -159,8 +170,8 @@ if (isset($_POST['go']) || isset($_POST['targetPage'])) {
                         </div>
                     </div>
                 </div>
-                <a href="#home" class="nav-link">
-                    <i class="bx bx-heart nav-link-icon"></i>
+                <a href="Yeuthich.php?user_id=<?php echo  $_SESSION['user_id']; ?>" class="nav-link">
+                    <i class='bx bx-heart'></i>
                     <span class="nav-link-title">Yêu thích</span>
                 </a>
             </div>
@@ -205,21 +216,21 @@ if (isset($_POST['go']) || isset($_POST['targetPage'])) {
             </div>
         </div>
         <div class="pagination">
-            <?php
-            // Kiểm tra trang hiện tại
-            if ($page > 1) {
-                echo '<a href="PhimBo.php?page=' . ($page - 1) . '" class="page-link">Trang trước</a>';
-            }
-            ?>
-            <form method="get" class="page-input-form" id="page-form" action="PhimBo.php">
-                <input type="number" name="page" min="1" max="<?php echo $totalPages; ?>" class="page-input" placeholder="Số trang" id="target-page">
-            </form>
-            <?php
-            // Kiểm tra trang tiếp theo
-            if ($page < $totalPages) {
-                echo '<a href="PhimBo.php?page=' . ($page + 1) . '" class="page-link">Trang sau</a>';
-            }
-            ?>
+
+        <?php if ($page > 1): ?>
+    <a href="PhimLe.php?page=<?php echo ($page - 1); ?>&user_id=<?php echo $_SESSION['user_id']; ?>" class="page-link">Trang trước</a>
+<?php endif; ?>
+            
+
+          <form method="get" class="page-input-form" id="page-form" action="PhimLe.php">
+    <input type="number" name="page" min="1" max="<?php echo $totalPages; ?>" class="page-input" placeholder="Số trang" id="target-page">
+    <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
+</form>
+           
+           
+<?php if ($page < $totalPages): ?>
+    <a href="PhimLe.php?page=<?php echo ($page + 1); ?>&user_id=<?php echo $_SESSION['user_id']; ?>" class="page-link">Trang sau</a>
+<?php endif; ?>
         </div>
     </section>
 

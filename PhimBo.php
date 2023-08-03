@@ -20,6 +20,17 @@ if ($offset < 0) {
     $offset = 0;
 }
 
+
+if ($_SESSION['user_id'] !== null) {
+    $user_id = $_SESSION['user_id'];
+    $sql = "SELECT * FROM users WHERE id = '$user_id'";
+    $result = $connection->query($sql);
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+    }
+}
+
 // Truy vấn danh sách phim bộ từ cơ sở dữ liệu với phân trang
 $sql = "SELECT * FROM movies WHERE genre LIKE '%Phim bộ%' LIMIT $itemsPerPage OFFSET $offset";
 $result = $connection->query($sql);
@@ -105,17 +116,20 @@ if (isset($_POST['go']) || isset($_POST['targetPage'])) {
             <a href="TrangChu.html" class="logo">
                 Movie<span>Manhwa</span>
             </a>
+            
             <div class="search-box">
-                <form method="post" style="display: flex;">
-                    <input type="text" name="noidung" autocomplete="off" id="search-input" placeholder="Search Movies">
-                    <button class="search-button" type="submit" name="btn">
-                        <a href="search.php"><i class="bx bx-search"></i> </a>
-                    </button>
-                </form>
-            </div>
-            <a href="#" class="user">
-                <img src="img/images.png" alt="" class="user-img">
+    <form method="post" action="search.php" style="display: flex;">
+        <input type="text" name="noidung" autocomplete="off" id="search-input" placeholder="Search Movies">
+        <button class="search-button" type="submit" name="btn">
+            <i class="bx bx-search"></i>
+        </button>
+    </form>
+</div>
+
+            <a href="<?php echo isset($_SESSION['user_id']) ? 'UserInfo.php?user_id=' . $_SESSION['user_id'] : 'Dangnhap.php'; ?>" class="user">
+                <img src="<?php echo isset($user['avatar_link']) ? $user['avatar_link'] : 'img/images.png'; ?>" alt="" class="user-img">
             </a>
+            
             <div class="navbar">
                 <a href="Trangchu.php?user_id=<?php echo $_SESSION['user_id']; ?>" class="nav-link">
                     <i class="bx bx-home nav-link-icon"></i>
@@ -205,21 +219,21 @@ if (isset($_POST['go']) || isset($_POST['targetPage'])) {
             </div>
         </div>
         <div class="pagination">
-            <?php
-            // Kiểm tra trang hiện tại
-            if ($page > 1) {
-                echo '<a href="PhimBo.php?page=' . ($page - 1) . '" class="page-link">Trang trước</a>';
-            }
-            ?>
-            <form method="get" class="page-input-form" id="page-form" action="PhimBo.php">
-                <input type="number" name="page" min="1" max="<?php echo $totalPages; ?>" class="page-input" placeholder="Số trang" id="target-page">
-            </form>
-            <?php
-            // Kiểm tra trang tiếp theo
-            if ($page < $totalPages) {
-                echo '<a href="PhimBo.php?page=' . ($page + 1) . '" class="page-link">Trang sau</a>';
-            }
-            ?>
+            
+        <?php if ($page > 1): ?>
+    <a href="PhimBo.php?page=<?php echo ($page - 1); ?>&user_id=<?php echo $_SESSION['user_id']; ?>" class="page-link">Trang trước</a>
+<?php endif; ?>
+            
+
+          <form method="get" class="page-input-form" id="page-form" action="PhimBo.php">
+    <input type="number" name="page" min="1" max="<?php echo $totalPages; ?>" class="page-input" placeholder="Số trang" id="target-page">
+    <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
+</form>
+           
+           
+<?php if ($page < $totalPages): ?>
+    <a href="PhimBo.php?page=<?php echo ($page + 1); ?>&user_id=<?php echo $_SESSION['user_id']; ?>" class="page-link">Trang sau</a>
+<?php endif; ?>
         </div>
     </section>
 

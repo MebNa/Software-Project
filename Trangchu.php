@@ -37,7 +37,7 @@ $connection->close();
     <title>ManhwaMovies</title>
     <!-- Link to CSS -->
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="./search.css">
+    <link rel="stylesheet" href="search.css">
     <!-- Link Swiper CSS-->
     <link rel="stylesheet" href="css/cdn.jsdelivr.net_npm_swiper@10.0.4_swiper-bundle.min.css">
     <!-- Fav Icon -->
@@ -46,19 +46,7 @@ $connection->close();
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" type="text/css" href="dropdown.css">
     <style>
-        .user-info {
-            display: flex;
-            align-items: center;
-        }
-
-        .user-info img {
-            width: 250px;
-            height:350px;
-            object-fit: cover;
-            margin-right: 1rem;
-            margin-bottom:30px;
-        }
-
+    
     </style>
 </head>
 <body>
@@ -72,16 +60,16 @@ $connection->close();
             </a>
             <!-- Search Box-->
             <div class="search-box">
-                <form method="post" style="display: flex;">
-                    <input type="text" name="noidung" autocomplete="off" id="search-input" placeholder="Search Movies">
-                    <button class="search-button" type="submit" name="btn">
-                        <a href="Search.html"><i class='bx bx-search'></i> </a>
-                    </button>
-                </form>
-            </div>
+    <form method="post" action="search.php" style="display: flex;">
+        <input type="text" name="noidung" autocomplete="off" id="search-input" placeholder="Search Movies">
+        <button class="search-button" type="submit" name="btn">
+            <i class="bx bx-search"></i>
+        </button>
+    </form>
+</div>
             <!-- User -->
             <a href="<?php echo isset($_SESSION['user_id']) ? 'UserInfo.php?user_id=' . $_SESSION['user_id'] : 'Dangnhap.php'; ?>" class="user">
-            <img src="<?php echo $user !== null ? $user['avatar_link'] : 'img/images.png'; ?>" alt="" class="user-img">
+                <img src="<?php echo isset($user['avatar_link']) ? $user['avatar_link'] : 'img/images.png'; ?>" alt="" class="user-img">
             </a>
             <!-- NavBar -->
             <div class="navbar">
@@ -107,23 +95,23 @@ $connection->close();
                          </a>
                          <div class="dropdown-content">
                          <div class="column">
-                         <a href="Theloai.php?genre=Hài hước&user_id=<?php echo $userId; ?>">Hài hước</a>
-                             <a href="Theloai.php?genre=Hành động">Hành động</a>
-                             <a href="Theloai.php?genre=Phiêu lưu">Phiêu lưu</a>
-                             <a href="Theloai.php?genre=Tình cảm">Tình cảm</a>
-                             <a href="Theloai.php?genre=Học đường">Học đường</a>
-                             <a href="Theloai.php?genre=Võ thuật">Võ thuật</a>
-                             <a href="Theloai.php?genre=Tài liệu">Tài liệu</a>
+                         <a href="Theloai.php?genre=Hài hước&user_id=<?php echo $_SESSION['user_id']; ?>">Hài hước</a>
+                            <a href="Theloai.php?genre=Hành động&user_id=<?php echo $_SESSION['user_id']; ?>">Hành động</a>
+                            <a href="Theloai.php?genre=Phiêu lưu&user_id=<?php echo $_SESSION['user_id']; ?>">Phiêu lưu</a>
+                            <a href="Theloai.php?genre=Tình cảm&user_id=<?php echo $_SESSION['user_id']; ?>">Tình cảm</a>
+                            <a href="Theloai.php?genre=Học đường&user_id=<?php echo $_SESSION['user_id']; ?>">Học đường</a>
+                            <a href="Theloai.php?genre=Võ thuật&user_id=<?php echo $_SESSION['user_id']; ?>">Võ thuật</a>
+                            <a href="Theloai.php?genre=Tài liệu&user_id=<?php echo $_SESSION['user_id']; ?>">Tài liệu</a>
                  
                          </div>
                          <div class="column">
-                             <a href="Theloai.php?genre=Viễn tưởng">Viễn tưởng</a>
-                             <a href="Theloai.php?genre=Hoạt hình">Hoạt hình</a>
-                             <a href="Theloai.php?genre=Thể thao">Thể thao</a>
-                             <a href="Theloai.php?genre=Âm nhạc">Âm nhạc</a>
-                             <a href="Theloai.php?genre=Gia đình">Gia đình</a>
-                             <a href="Theloai.php?genre=Kinh dị">Kinh dị</a>
-                             <a href="Theloai.php?genre=Tâm lý">Tâm lý</a>
+                         <a href="Theloai.php?genre=Viễn tưởng&user_id=<?php echo $_SESSION['user_id']; ?>">Viễn tưởng</a>
+                            <a href="Theloai.php?genre=Hoạt hình&user_id=<?php echo $_SESSION['user_id']; ?>">Hoạt hình</a>
+                            <a href="Theloai.php?genre=Thể thao&user_id=<?php echo $_SESSION['user_id']; ?>">Thể thao</a>
+                            <a href="Theloai.php?genre=Âm nhạc&user_id=<?php echo $_SESSION['user_id']; ?>">Âm nhạc</a>
+                            <a href="Theloai.php?genre=Gia đình&user_id=<?php echo $_SESSION['user_id']; ?>">Gia đình</a>
+                            <a href="Theloai.php?genre=Kinh dị&user_id=<?php echo $_SESSION['user_id']; ?>">Kinh dị</a>
+                            <a href="Theloai.php?genre=Tâm lý&user_id=<?php echo $_SESSION['user_id']; ?>">Tâm lý</a>
                          </div>
                          <!-- Thêm các thể loại khác tương ứng với các option -->
                      </div>
@@ -131,7 +119,7 @@ $connection->close();
                      </div>
                 
                  
-                <a href="Yeuthich.php" class="nav-link">
+                     <a href="Yeuthich.php?user_id=<?php echo  $_SESSION['user_id']; ?>" class="nav-link">
                     <i class='bx bx-heart'></i>
                     <span class="nav-link-title">Yêu thích</span>
                 </a>

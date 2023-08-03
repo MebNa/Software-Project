@@ -8,9 +8,11 @@ include 'db_connection.php';
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
 } else {
-    // Chuyển hướng đến trang Đăng nhập
-    header("Location: Dangnhap.php");
-    exit();
+    echo '<script>
+    alert("Vui lòng đăng nhập trước khi vào trang thông tin cá nhân");
+    window.location.href = "Dangnhap.php";
+</script>';
+exit();
 }
 
 // Lấy thông tin người dùng từ cơ sở dữ liệu
@@ -21,8 +23,10 @@ if ($result->num_rows > 0) {
     $user = $result->fetch_assoc();
 } else {
     // Chuyển hướng đến trang Đăng nhập
-    header("Location: Dangnhap.php");
-    exit();
+    echo '<script>
+    alert("Vui lòng đăng nhập trước khi vào trang thông tin cá nhân");
+    window.location.href = "Dangnhap.php";
+</script>';
 }
 
 // Xử lý yêu cầu cập nhật thông tin người dùng
@@ -50,8 +54,10 @@ if (isset($_POST['logout'])) {
     // Hủy bỏ session
     session_destroy();
     // Điều hướng đến trang Đăng nhập
-    header("Location: Dangnhap.php");
-    exit();
+    echo '<script>
+    alert("Đăng xuất thành công");
+    window.location.href = "Dangnhap.php";
+</script>';
 }
 ?>
 
@@ -68,24 +74,6 @@ if (isset($_POST['logout'])) {
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="dropdown.css">
     <style>
-        .user {
-            display: flex;
-            align-items: center;
-        }
-
-        .user-img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: contain;
-            object-position: center;
-        }
-
-        /* Section */
-        section {
-            padding: 3rem 0 2rem;
-        }
-
         .user-info {
             display: flex;
             align-items: center;
@@ -93,10 +81,14 @@ if (isset($_POST['logout'])) {
 
         .user-info img {
             width: 100%;
-            height:500px;
             object-fit: cover;
             margin-right: 1rem;
             margin-bottom:30px;
+        }
+
+        /* Section */
+        section {
+            padding: 3rem 0 2rem;
         }
 
         .info p {
@@ -187,15 +179,15 @@ if (isset($_POST['logout'])) {
             </a>
             <!-- Search Box -->
             <div class="search-box">
-                <form method="post" style="display: flex;">
-                    <input type="text" name="noidung" autocomplete="off" id="search-input" placeholder="Search Movies">
-                    <button class="search-button" type="submit" name="btn">
-                        <a href="search.php"><i class="bx bx-search"></i> </a>
-                    </button>
-                </form>
-            </div>
+    <form method="post" action="search.php" style="display: flex;">
+        <input type="text" name="noidung" autocomplete="off" id="search-input" placeholder="Search Movies">
+        <button class="search-button" type="submit" name="btn">
+            <i class="bx bx-search"></i>
+        </button>
+    </form>
+</div>
             <!-- User -->
-            <a href="#" class="user">
+            <a href="<?php echo isset($_SESSION['user_id']) ? 'UserInfo.php?user_id=' . $_SESSION['user_id'] : 'Dangnhap.php'; ?>" class="user">
                 <img src="<?php echo isset($user['avatar_link']) ? $user['avatar_link'] : 'img/images.png'; ?>" alt="" class="user-img">
             </a>
             <!-- Navbar -->
@@ -242,8 +234,8 @@ if (isset($_POST['logout'])) {
                         </div>
                     </div>
                 </div>
-                <a href="#home" class="nav-link">
-                    <i class="bx bx-heart nav-link-icon"></i>
+                <a href="Yeuthich.php?user_id=<?php echo  $_SESSION['user_id']; ?>" class="nav-link">
+                    <i class='bx bx-heart'></i>
                     <span class="nav-link-title">Yêu thích</span>
                 </a>
             </div>
@@ -258,6 +250,7 @@ if (isset($_POST['logout'])) {
             <div class="user-info">
                 <img src="<?php echo isset($user['avatar_link']) ? $user['avatar_link'] : 'img/images.png'; ?>" alt="Avatar">
                 <div class="info">
+
                 </div>
             </div>
 
