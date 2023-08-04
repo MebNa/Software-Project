@@ -24,7 +24,6 @@ if ($_SESSION['user_id'] !== null) {
     }
 }
 
-
 // Kiểm tra xem id phim đã được truyền vào hay chưa
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
@@ -62,39 +61,37 @@ if (isset($_GET['id'])) {
                 echo "Bạn phải đăng nhập để thực hiện thao tác này.";
             }
         }
-    }
-}
 
-// Kiểm tra xem người dùng đã đánh giá cho bộ phim này chưa
-$checkRatingSql = "SELECT * FROM ratings WHERE user_id = '$user_id' AND movie_id = '$id'";
-$checkRatingResult = $connection->query($checkRatingSql);
+        // Kiểm tra xem người dùng đã đánh giá cho bộ phim này chưa
+        $checkRatingSql = "SELECT * FROM ratings WHERE user_id = '$user_id' AND movie_id = '$id'";
+        $checkRatingResult = $connection->query($checkRatingSql);
 
-if ($checkRatingResult->num_rows > 0) {
-    echo "Bạn đã đánh giá cho bộ phim này trước đó.";
-} else {
-    // Kiểm tra xem người dùng đã chọn điểm đánh giá từ 1 đến 10 hay chưa
-    if (isset($_POST['rating'])) {
-        $rating = $_POST['rating'];
-
-        // Kiểm tra xem điểm đánh giá nằm trong khoảng từ 1 đến 10 hay không
-        if ($rating >= 1 && $rating <= 10) {
-            // Thêm điểm đánh giá vào cơ sở dữ liệu
-            $insertRatingSql = "INSERT INTO ratings (user_id, movie_id, rating) VALUES ('$user_id', '$id', '$rating')";
-            $insertRatingResult = $connection->query($insertRatingSql);
-
-            if ($insertRatingResult === true) {
-                echo "Đánh giá của bạn đã được ghi nhận.";
-            } else {
-                echo "Đã xảy ra lỗi. Vui lòng thử lại sau.";
-            }
+        if ($checkRatingResult->num_rows > 0) {
+            echo "Bạn đã đánh giá cho bộ phim này trước đó.";
         } else {
-            echo "Điểm đánh giá phải nằm trong khoảng từ 1 đến 10.";
+            // Kiểm tra xem người dùng đã chọn điểm đánh giá từ 1 đến 10 hay chưa
+            if (isset($_POST['rating'])) {
+                $rating = $_POST['rating'];
+
+                // Kiểm tra xem điểm đánh giá nằm trong khoảng từ 1 đến 10 hay không
+                if ($rating >= 1 && $rating <= 10) {
+                    // Thêm điểm đánh giá vào cơ sở dữ liệu
+                    $insertRatingSql = "INSERT INTO ratings (user_id, movie_id, rating) VALUES ('$user_id', '$id', '$rating')";
+                    $insertRatingResult = $connection->query($insertRatingSql);
+
+                    if ($insertRatingResult === true) {
+                        // Đánh giá thành công, gửi thông báo bằng JavaScript
+                        echo '<script>alert("Đánh giá thành công!");</script>';
+                    } else {
+                        echo "Đã xảy ra lỗi. Vui lòng thử lại sau.";
+                    }
+                } else {
+                    echo "Điểm đánh giá phải nằm trong khoảng từ 1 đến 10.";
+                }
+            }
         }
     }
 }
-
-
-
 
 // Kiểm tra xem id phim đã được truyền vào hay chưa
 if (isset($_GET['id'])) {
@@ -254,7 +251,7 @@ if (isset($_GET['id'])) {
    
 }
 
-.rating-stars label {
+.rating-stars label  {
     display: inline-block;
     cursor: pointer;
     width: 23px;
@@ -263,10 +260,10 @@ if (isset($_GET['id'])) {
     background-size: cover;
 }
 
-.rating-stars label:hover,
+.rating-stars input:checked ~ label,
 .rating-stars label:hover ~ label,
-.rating-stars input:checked ~ label {
-    background-image: url('path-to-your-filled-star-icon-image.png');
+.rating-stars label:hover {
+    background-image: url('https://cdn-icons-png.flaticon.com/128/1828/1828970.png');
 }
 
 button[name="rate_movie"] {
@@ -392,17 +389,17 @@ button[name="rate_movie"]:hover {
                         <p><strong>Đạo diễn:</strong> <?php echo $row['director']; ?></p>
 <!-- Thêm vào phần HTML -->
 <div class="movie-rating">
-    <form method="POST" action="AddFavorite.php?id=<?php echo $row['id']; ?>&user_id=<?php echo $_SESSION['user_id']; ?>">
-        <label for="rating">Đánh giá phim:</label>
-        <div class="rating-stars">
-            <?php for ($i = 1; $i <= 10; $i++) { ?>
-                <input type="radio" id="star<?php echo $i; ?>" name="rating" value="<?php echo $i; ?>" required>
-                <label for="star<?php echo $i; ?>"></label>
-            <?php } ?>
-        </div>
-        <button type="submit" name="rate_movie">Đánh giá</button>
-    </form>
-</div>
+        <form method="POST" action="" id="ratingForm">
+            <label for="rating">Đánh giá phim:</label>
+            <div class="rating-stars">
+                <?php for ($i = 1; $i <= 10; $i++) { ?>
+                    <input type="radio" id="star<?php echo $i; ?>" name="rating" value="<?php echo $i; ?>" required>
+                    <label for="star<?php echo $i; ?>"></label>
+                <?php } ?>
+            </div>
+            <button type="submit" name="rate_movie">Đánh giá</button>
+        </form>
+    </div>
 
 
 

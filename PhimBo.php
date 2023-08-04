@@ -173,7 +173,7 @@ if (isset($_POST['go']) || isset($_POST['targetPage'])) {
                         </div>
                     </div>
                 </div>
-                <a href="#home" class="nav-link">
+                <a href="Yeuthich.php?user_id=<?php echo  $_SESSION['user_id']; ?>" class="nav-link">
                     <i class="bx bx-heart nav-link-icon"></i>
                     <span class="nav-link-title">Yêu thích</span>
                 </a>

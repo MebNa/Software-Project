@@ -19,7 +19,8 @@ if (isset($_SESSION['user_id'])) {
                 $deleteResult = $connection->query($deleteSql);
             }
             // Refresh trang sau khi xóa
-            echo "<script>window.location.href = 'Yeuthich.php';</script>";
+            echo "<script>alert('Xóa khỏi danh sách yêu thích thành công!'); window.location.href = 'Yeuthich.php';</script>";
+            exit; // Stop further execution
         }
     }
 
@@ -31,12 +32,21 @@ if (isset($_SESSION['user_id'])) {
 
     // Đóng kết nối cơ sở dữ liệu
     $connection->close();
+} else {
+    // Chuyển hướng đến trang Đăng nhập nếu người dùng chưa đăng nhập
+    echo '<script>
+        alert("Vui lòng đăng nhập");
+        window.location.href = "Dangnhap.php";
+    </script>';
+    exit; // Stop further execution
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ManhwaMovies</title>
@@ -52,6 +62,7 @@ if (isset($_SESSION['user_id'])) {
     <link rel="stylesheet" type="text/css" href="dropdown.css">
 
     <style>
+
     .container h1{
         margin-top:80px;
         margin-bottom:20px;
@@ -63,11 +74,14 @@ if (isset($_SESSION['user_id'])) {
             display: flex;
             justify-content: center;
             align-items: flex-end;
-            margin-top: 30px;
+            margin-top: 15px;
 
             
         }
-
+        .box-text a {
+    color: white;
+    text-decoration: none; /* Loại bỏ gạch chân khi hover */
+}
     .favorite-checkbox {
         width: 30px;
         height: 30px;
@@ -97,6 +111,7 @@ if (isset($_SESSION['user_id'])) {
     height: 400px; /* Kích thước hình ảnh phim */
     object-fit: cover;
 }
+
     </style>
 </head>
 
@@ -131,7 +146,7 @@ if (isset($_SESSION['user_id'])) {
                     <span class="nav-link-title">Thịnh hành</span>
                 </a>
 
-                <a href="PhimBo.php?user_id=<?php echo $_SESSION['user_id']; ?>" class="nav-link nav-active">
+                <a href="PhimBo.php?user_id=<?php echo $_SESSION['user_id']; ?>" class="nav-link">
                     <i class="bx bxs-movie nav-link-icon"></i>
                     <span class="nav-link-title">Phim bộ</span>
                 </a>
@@ -168,7 +183,7 @@ if (isset($_SESSION['user_id'])) {
                     </div>
                 </div>
 
-                <a href="Yeuthich.php?user_id=<?php echo  $_SESSION['user_id']; ?>" class="nav-link">
+                <a href="Yeuthich.php?user_id=<?php echo  $_SESSION['user_id']; ?>" class="nav-link nav-active">
                     <i class="bx bx-heart nav-link-icon"></i>
                     <span class="nav-link-title">Yêu thích</span>
                 </a>
@@ -177,52 +192,51 @@ if (isset($_SESSION['user_id'])) {
         </div>
     </header>
 
-
     <?php if (isset($_SESSION['user_id'])) { ?>
-        <section class="favorite-movies-section">
-
-
+       <section class="favorite-movies-section">
+    <div class="container">
+        <h1>Danh sách phim yêu thích của bạn</h1>
+        <form id="favorite-form" method="POST">
             <?php if ($result->num_rows > 0) { ?>
-                <div class="container">
-                    <h1>Danh sách phim yêu thích của bạn</h1>
-                    <button type="submit" name="delete" onclick="return confirm('Bạn có chắc chắn muốn xóa?')" class="delete-button">Xóa khỏi danh sách yêu thích</button>
-                    <form id="favorite-form" method="POST">
-                        <div class="movie-grid">
-                            <?php while ($row = $result->fetch_assoc()) { ?>
-                                <div class="favorite-movie">
-                                    <img src="<?php echo $row['image']; ?>" alt="Movie Poster">
-                                    <div class="movie-info">
-                                        <h2 class="movie-title"><?php echo $row['title']; ?></h2>
-                                        <div class="checkbox-container">
-                                            <input type="checkbox" name="favorite[]" value="<?php echo $row['id']; ?>" class="favorite-checkbox">
-                                        </div>
-                                    </div>
+                <div class="movie-grid">
+                    <?php while ($row = $result->fetch_assoc()) { ?>
+                        <div class="movie-box">
+                            <img src="<?php echo $row['image']; ?>" alt="" class="movie-box-img">
+                            <div class="box-text">
+                                <a href="chitietphim.php?id=<?php echo $row['id']; ?>&user_id=<?php echo $_SESSION['user_id']; ?>">
+                                <h2 class="movie-title"><?php echo $row['title']; ?></h2>
+                                <span class="movie-type"><?php echo $row['genre']; ?></span>
+                                </a>
+                                <div class="checkbox-container">
+                                    <input type="checkbox" name="favorite[]" value="<?php echo $row['id']; ?>" class="favorite-checkbox">
                                 </div>
-                            <?php } ?>
                         </div>
-                    </form>
+                            </div>
+                            
+                       
+                    <?php } ?>
+                </div>
+                <!-- Add some margin between the movie grid and the delete button -->
+                <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+                    <button type="submit" name="delete" onclick="deleteFavorites()" class="delete-button">Xóa khỏi danh sách yêu thích</button>
                 </div>
             <?php } else { ?>
-                <div class="container">
-                    <p class="no-favorite">Bạn chưa có bộ phim nào trong danh sách yêu thích.</p>
-                </div>
+                <p class="no-favorite">Bạn chưa có bộ phim nào trong danh sách yêu thích.</p>
             <?php } ?>
-        </section>
-    <?php } else {
-        // Chuyển hướng đến trang Đăng nhập nếu người dùng chưa đăng nhập
-        echo '<script>
-        alert("Vui lòng đăng nhập ");
-        window.location.href = "Dangnhap.php";
-    </script>';
-    } ?>
+        </form>
+    </div>
+</section>
+    <?php } ?>
+
+    <script>
+        function deleteFavorites() {
+            if (confirm("Bạn có chắc chắn muốn xóa?")) {
+                document.getElementById('favorite-form').submit();
+            }
+        }
+    </script>
+     <script src="js/main.js"></script>
+    <script src="dropdown.js"></script>
+</body>
 
 </html>
-<?php
-} else {
-    // Chuyển hướng đến trang Đăng nhập nếu người dùng chưa đăng nhập
-    echo '<script>
-    alert("Vui lòng đăng nhập ");
-    window.location.href = "Dangnhap.php";
-</script>';
-}
-?>
