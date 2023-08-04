@@ -1,6 +1,7 @@
 <?php
 // Kết nối đến cơ sở dữ liệu
 include 'db_connection.php';
+include 'C:/Users/Anbewwwwwwwwwwwwww/Desktop/api_tmdb.php';
 
 // Bắt đầu phiên làm việc với session
 session_start();
@@ -25,8 +26,8 @@ if (isset($_SESSION['user_id'])) {
     }
 
     // Truy vấn danh sách phim yêu thích của user
-    $sql = "SELECT movies.* FROM movies
-            INNER JOIN favorites ON movies.id = favorites.movie_id
+    $sql = "SELECT * FROM tmdb_5000_movies
+            INNER JOIN favorites ON tmdb_5000_movies.id = favorites.movie_id
             WHERE favorites.user_id = $user_id";
     $result = $connection->query($sql);
 
@@ -201,11 +202,15 @@ if (isset($_SESSION['user_id'])) {
                 <div class="movie-grid">
                     <?php while ($row = $result->fetch_assoc()) { ?>
                         <div class="movie-box">
-                            <img src="<?php echo $row['image']; ?>" alt="" class="movie-box-img">
+                            <?php
+                            $movie_id = $row['movie_id'];
+                            $poster_url = get_movie_image_url($movie_id);
+                            ?>
+                            <img src="<?php echo $poster_url; ?>" alt="" class="movie-box-img">
                             <div class="box-text">
-                                <a href="chitietphim.php?id=<?php echo $row['id']; ?>&user_id=<?php echo $_SESSION['user_id']; ?>">
+                                <a href="chitietphim.php?id=<?php echo $row['movie_id']; ?>&user_id=<?php echo $_SESSION['user_id']; ?>">
                                 <h2 class="movie-title"><?php echo $row['title']; ?></h2>
-                                <span class="movie-type"><?php echo $row['genre']; ?></span>
+                                
                                 </a>
                                 <div class="checkbox-container">
                                     <input type="checkbox" name="favorite[]" value="<?php echo $row['id']; ?>" class="favorite-checkbox">
