@@ -34,7 +34,7 @@ if ($_SESSION['user_id'] !== null) {
 
 
 // Truy vấn danh sách phim theo thể loại từ cơ sở dữ liệu với phân trang
-$sql = "SELECT * FROM movies WHERE genre LIKE '%$genre%' LIMIT $itemsPerPage OFFSET $offset";
+$sql = "SELECT * FROM tmdb_5000_movies WHERE genres LIKE '%$genre%' LIMIT $itemsPerPage OFFSET $offset";
 $result = $connection->query($sql);
 
 // Truy vấn để đếm tổng số phim theo thể loại
@@ -154,13 +154,9 @@ if (isset($_POST['go']) || isset($_POST['targetPage'])) {
                     </a>
                     <div class="dropdown-content">
                         <div class="column">
-                            <a href="Theloai.php?genre=Hài hước&user_id=<?= $_SESSION['user_id'] ?>">Hài hước</a>
-                            <a href="Theloai.php?genre=Hành động&user_id=<?= $_SESSION['user_id'] ?>">Hành động</a>
-                            <a href="Theloai.php?genre=Phiêu lưu&user_id=<?= $_SESSION['user_id'] ?>">Phiêu lưu</a>
-                            <a href="Theloai.php?genre=Tình cảm&user_id=<?= $_SESSION['user_id'] ?>">Tình cảm</a>
-                            <a href="Theloai.php?genre=Học đường&user_id=<?= $_SESSION['user_id'] ?>">Học đường</a>
-                            <a href="Theloai.php?genre=Võ thuật&user_id=<?= $_SESSION['user_id'] ?>">Võ thuật</a>
-                            <a href="Theloai.php?genre=Tài liệu&user_id=<?= $_SESSION['user_id'] ?>">Tài liệu</a>
+                            <a href="Theloai.php?genre=Crime&user_id=<?= $_SESSION['user_id'] ?>">Tội phạm</a>
+                            <a href="Theloai.php?genre=Adventure&user_id=<?= $_SESSION['user_id'] ?>">Phiêu Lưu</a>
+                            <a href="Theloai.php?genre=Animation&user_id=<?= $_SESSION['user_id'] ?>">Anime</a>
                         </div>
                         <div class="column">
                             <a href="Theloai.php?genre=Viễn tưởng&user_id=<?= $_SESSION['user_id'] ?>">Viễn tưởng</a>
@@ -173,7 +169,7 @@ if (isset($_POST['go']) || isset($_POST['targetPage'])) {
                         </div>
                     </div>
                 </div>
-                <a href="Yeuthich.php?user_id=<?php echo  $_SESSION['user_id']; ?>" class="nav-link">
+                <a href="#home" class="nav-link">
                     <i class="bx bx-heart nav-link-icon"></i>
                     <span class="nav-link-title">Yêu thích</span>
                 </a>
@@ -187,16 +183,23 @@ if (isset($_POST['go']) || isset($_POST['targetPage'])) {
         </div>
         <div class="popular-content">
             <div class="movie-grid">
-<?php        
+<?php
 // Hiển thị danh sách phim theo thể loại
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
+        $genres = json_decode($row['genres'], true);
 ?>
         <div class="movie-box">
             <img src="<?= $row['image'] ?>" alt="" class="movie-box-img">
             <div class="box-text">
                 <h2 class="movie-title"><?= $row['title'] ?></h2>
-                <span class="movie-type"><?= $row['genre'] ?></span>
+                <span class="movie-type">
+                    <?php
+                    foreach ($genres as $genre) {
+                        echo $genre['name'] . ", ";
+                    }
+                    ?>
+                </span>
                 <a href="chitietphim.php?id=<?= $row['id'] ?>&user_id=<?= $_SESSION['user_id'] ?>" class="watch-btn play-btn">
                     <i class="bx bx-right-arrow"></i>
                 </a>
